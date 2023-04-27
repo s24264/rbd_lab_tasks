@@ -1,0 +1,32 @@
+CREATE  INDEX idx_user_name ON data.user (name);
+--index---------------------
+CREATE VIEW  data.trip_with_driver_info AS
+SELECT c.id, c.distance,d.image,dc.registration_number
+FROM data.crossing c
+JOIN data.drivers_car dc ON c.id=dc.id
+JOIN DATA.driver d ON dc.id=d.id;
+--view---------------------------
+CREATE PROCEDURE add_user(
+    p_name VARCHAR(20),
+    p_surname VARCHAR(20),
+    p_email VARCHAR(40),
+    p_telephone_number VARCHAR(12)
+)
+LANGUAGE SQL AS $$
+INSERT INTO data.user(name,surename,email,telephone_number)
+VALUES(p_name,p_surname,p_email,p_telephone_number);
+$$;
+--procedure---------------------------
+CREATE 
+OR REPLACE FUNCTION data.get_users()
+    RETURNS TABLE(
+        id INT,
+        name VARCHAR(20),
+        surname VARCHAR(30),
+        email VARCHAR(40)        
+    )AS $$
+BEGIN
+RETURN QUERY SELECT id,name,surname,email,telephone_number FROM data.user;
+END;
+    $$;    
+--funkcja---------------------------------
